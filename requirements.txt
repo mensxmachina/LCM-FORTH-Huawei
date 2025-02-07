@@ -1,0 +1,8 @@
+einops==0.8.0
+lightning==2.4.0
+matplotlib
+numpy
+omegaconf==2.3.0
+pandas
+networkx
+torch==2.5.0
