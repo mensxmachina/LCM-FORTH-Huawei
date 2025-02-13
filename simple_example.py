@@ -14,10 +14,10 @@ variable_names = list(df.columns)
 
 # model loading and prediction
 models_path = 'res'
-model_name = 'lcm_CI_12_3_joint_220k' 
+model_name = 'lcm_CI_RH_12_3_merged_290k' 
 
 model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
 pred = run_cp_and_parse_res(model_name, model = model, df = df, max_lag = 2, seed = 42)
 
 # result plotting
-plot_summary_from_pred(pred, variable_names, plt_thr = 0.5)
+plot_summary_from_pred(pred, variable_names, plt_thr = 0.75)
