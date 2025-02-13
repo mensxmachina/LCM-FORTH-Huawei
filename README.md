@@ -50,7 +50,7 @@ Load the `.ckpt` pretrained model for causal prediction:
 
 ```python
 models_path = 'res'
-model_name = 'lcm_CI_12_3_joint_220k'
+model_name = 'lcm_CI_RH_12_3_merged_290k'
 
 model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
 ```
