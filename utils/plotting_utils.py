@@ -8,21 +8,22 @@ def plot_summary_from_pred(adj_matrix, variable_names, plt_thr):
     based on a 3D adjacency matrix. plt_thr controls the graph sparsity: the higher plt_thr, the more sparse the graph
     """
     n_var, _, n_time_steps = adj_matrix.shape
-    
+    adj_matrix = adj_matrix[:n_var, :n_var, -n_time_steps:]
+
     G = nx.DiGraph()
     G.add_nodes_from(range(n_var))
 
     for t in range(n_time_steps):
         for i in range(n_var):
             for j in range(n_var):
-                if adj_matrix[i, j, t] > plt_thr:
+                if adj_matrix[i, j, t] > plt_thr and i != j:
                     # Add an edge with the time step as an attribute
                     if G.has_edge(j, i):
                         # If an edge already exists, append the time step to the list
-                        G[j][i]['time_steps'].append(f't-{t}')
+                        G[j][i]['time_steps'].append(f't-{n_time_steps-t}')
                     else:
                         # Otherwise, create a new edge with the first time step
-                        G.add_edge(j, i, time_steps=[f't-{t}'])
+                        G.add_edge(j, i, time_steps=[f't-{n_time_steps-t}'])
 
     # Draw the graph
     pos = nx.spring_layout(G, seed=42)  # Layout for node positions
