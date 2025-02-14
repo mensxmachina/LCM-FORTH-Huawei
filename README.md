@@ -67,7 +67,7 @@ pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2, seed=42)
 The result is a lagged adjacency tensor of shape `(N, N, max_lag)` where:
 
 - `N` is the number of input time-series
-- `pred[i, j, k]` represents the probability that the `j`-th time-series at time `t-k` causes the `i`-th time-series at time `t`.
+- `pred[i, j, k]` represents the probability that the `j`-th time-series at time `t-(max_lag - k)` causes the `i`-th time-series at time `t`.
 
 ### 5. Visualize the Results
 
