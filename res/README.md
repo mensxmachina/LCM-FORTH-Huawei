@@ -1,1 +1,0 @@
-Place the model weights in this folder
