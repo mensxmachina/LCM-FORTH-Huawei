@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Large Causal Models for Causal Discovery on Time Series</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This website contains an introduction on Large Causal Models for time series.">
+    <meta name="language" content="English">
+    <meta name="author" content="Dario Simionato">
+    
+    <link rel="stylesheet" href="vocab/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script src="vocab/js/jquery-1.11.0.js"></script>
+    <script type="text/javascript" src="vocab/js/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="vocab/js/jquery.stickytableheaders.js"></script>
+    <script type="text/javascript" src="vocab/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="vocab/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="vocab/css/jquery-ui.css"></link>
+    <script type="text/javascript" id="js">
+        $(document).ready(function() { 
+            $("#tablesorter-demo").tablesorter(); 
+            $("#tablesorter-demo").stickyTableHeaders(); 
+            $('[data-toggle="tooltip"]').tooltip(); 
+        }); 
+    </script>
+
+    <link href="vocab/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>Large Causal Models on Time Series</h1>
+        <p class="lead">This page contains an introduction on the use of Large Causal Models (LCMs) on time series data for causal discovery tasks. Such project is a collaboration between Huawei Research Ireland and Men Ex Machina group (University of Crete and FORTH).</p>
+      </div>
+      <hr>
+
+      <div class="row">
+        <h2>What is a Large Causal Model?</h2>
+        <p>
+          A <strong>Large Causal Model (LCM)</strong> for causal discovery is a model that unveils the cause-and-effect relationships between variables in complex systems. These models are particularly useful for understanding how changes in one factor lead to changes in another, rather than just identifying correlations. Additionally, they help identify which variables influence others, especially in complex or high-dimensional datasets where traditional methods might miss key connections.
+        </ul>
+        
+        <h2>Why Use a Large Causal Model?</h2>
+        Large Causal Models combine the speed and flexibility of deep learning methods with the explainatory power of causal discovery methods, allowing for a fast and efficient prediction of the causal network. The output of causal discovery, in the form of a causal graph, can be used to explain algorithmic outcomes, such as identifying root causes, and to inform evidence-based decision-making, for example through counterfactual analysis.
+      </br>
+          <table id="tablesorter-demo" class="tablesorter table table-hover table-responsive">
+          <!-- <table> -->
+              <thead>
+                <tr>
+                  <th class="col-md-2">Approach</th>
+                  <th class="col-md-2">Discover causal connections</th>
+                  <th class="col-md-1">Fast inference</th>
+                  <th class="col-md-2">Scale to large data quantity</th>
+                </tr>
+              </thead>
+            <tbody>
+              <tr>
+                <td>
+                  ML/DL approaches
+                </td>
+                <td>No</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>
+                  Traditional Causal Discovery Methods                  
+                </td>
+                <td>Yes</td>
+                <td>No</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>
+                  Large Causal Models
+                </td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr>
+        
+        <!-- <p>
+          <strong>Comparison with Traditional ML/DL Techniques:</strong><br>
+          Traditional machine learning (ML) and deep learning (DL) models are excellent at predicting outcomes based on historical data, but they typically treat relationships between variables as black boxes. They identify patterns without revealing <strong>why</strong> certain events occur. In contrast, <strong>Large Causal Models</strong> allow us to identify <strong>cause-and-effect relationships</strong>, providing not only predictions but also explanations, which is essential for fields like policy-making, healthcare, and economics.
+        </p>
+        <p>
+          <strong>Comparison with Other State-of-the-Art (SoA) Causal Models:</strong><br>
+          While other causal inference methods, like <strong>Structural Equation Modeling (SEM)</strong> or <strong>Propensity Score Matching (PSM)</strong>, are valuable, they often struggle with scalability and handling complex, high-dimensional data. Large causal models, on the other hand, are designed to scale efficiently with large datasets and uncover interactions between many variables at once. They also offer better robustness in estimating effects and identifying causal structures compared to traditional approaches.
+        </p> -->
+        <h2>How does it work?</h2>
+        <p>
+          The LCM takes as input a dataset of time series and automatically predicts the full-time graph representing the causal relationships between the time series over a time window period. Such graph is then condensed in a simpler representation, the summary graph, in which each time series is represented as a node, and each discovered cause-effect relationship is represented as a directed link.
+        </p>
+        <div class="text-center">
+          <img src="vocab/img/pipeline.png" alt="Prediction Pipeline" class="img-squared" class="img-responsive "/>
+        </div>
+        <h2>Assumptions and Limitations</h2>
+        <p>
+          The last version of the LCMs works under the current assumptions:
+        </p>
+        <ul>
+          <li><strong>Causal Markov Condition and Faithfulness</strong>: These assumptions imply that the causal structure of the system fully captures the dependencies among the variables and that the observed data conforms to the causal relationships described by the model.</li>
+          <li><strong>Causal Inference of up to 12 Variables and 3 Time Lags</strong>: The models can handle inputs up to 12 variables and up to 3 time lags.</li>
+          <li><strong>No Contemporaneous Effects</strong>: We assume that all cause-effect relationships occur after at least one time lag, meaning that there are no contemporaneous effects where variables influence each other at the same time step.</li>
+          <li><strong>No Unobserved Confounders</strong>: The model relies on the assumption that all relevant causes are observable and accounted for.</li>
+          <li><strong>Causal Stationarity</strong>: The relationships between variables and their influences do not evolve or change in different time periods.</li>
+          <li><strong>Time-Series Stationarity</strong>: The input time-series data are assumed to be stationary, meaning their statistical properties, such as mean and variance, do not change over time.</li>
+        </ul>
+        
+        
+        <h2>Reproducibility</h2>
+        <p>Code and additional information can be found on the <a href="https://github.com/mensxmachina/LCM-FORTH-Huawei" target="_blank">project github page</a>.</p>
+      </div>
+
+      <footer class="footer">
+        <div class="row">
+          <div class="col-md-3">
+            <!-- Built with <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a><br>
+            Latest revision February, 2025 -->
+          </div>
+          <div class="col-md-9">
+            <a href="https://www.forth.gr/en/home/" target="_blank"><img src="vocab/img/forth logo.jpg" alt="FORTH logo" class="img-squared" class="img-responsive "/></a>
+            <a href="https://ie.linkedin.com/company/huawei-ireland-research-center" target="_blank"><img src="vocab/img/logo-huawei.jpeg" alt="Huawei Research logo" class="img-squared" class="img-responsive "/></a>
+            <a href="https://www.uoc.gr/en/home/" target="_blank"><img src="vocab/img/uni crete logo.jpg" alt="University of Crete logo" class="img-squared" class="img-responsive "/></a>
+          </div>
+          Built with <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a><br>
+          Latest revision February, 2025
+        </div>
+      </footer>
+    </div> <!-- /container -->
+
+  </body>
+</html>
