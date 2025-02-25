@@ -24,7 +24,6 @@ def create_example_data(n):
 def run_cp_and_parse_res(model_name, model, df, max_lag = 1, seed = 42):
     '''Run the causal prediction and parses the results to output a n_vars x n_vars x time_lags matrix'''
     assert max_lag <= 3 and len(df.columns) <= 12, 'Maximum 3 time steps and 12 variables'
-    set_seed(seed)
     X_test = torch.tensor(df.values, device='cpu', dtype=torch.float32)
     pred = run_cp(model_name, model = model, data = X_test, MAX_VAR = 12, MAX_LAG = 3)
     pred = pred[0].detach().clone()
@@ -32,13 +31,6 @@ def run_cp_and_parse_res(model_name, model, df, max_lag = 1, seed = 42):
     n_vars = len(df.columns)
     pred = pred[:n_vars, :n_vars, -max_lag:]
     return pred
-
-def set_seed(seed):
-    # random.seed(seed)               # Python random
-    np.random.seed(seed)            # NumPy random
-    torch.manual_seed(seed)         # PyTorch CPU random
-    torch.cuda.manual_seed(seed)    # PyTorch GPU random (if using CUDA)
-    torch.cuda.manual_seed_all(seed)  # For all GPUs (if using multiple GPUs)
 
 
 def run_cp(model_name, model, data, MAX_VAR=None, MAX_LAG=None, seed=None) -> torch.Tensor:

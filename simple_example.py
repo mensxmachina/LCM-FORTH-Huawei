@@ -1,12 +1,11 @@
 ## minimum reproducible code
 from pathlib import Path
 from utils.model_wrapper import Architecture_PL # defines the architecture
-from utils.cp_utils import set_seed, create_example_data, run_cp_and_parse_res # prediction module
+from utils.cp_utils import create_example_data, run_cp_and_parse_res # prediction module
 from utils.plotting_utils import plot_summary_from_pred # plotting module
 
 
 # data generation and normalization
-set_seed(42)
 n = 1000
 df = create_example_data(n)
 variable_names = list(df.columns)
