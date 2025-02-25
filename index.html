@@ -38,7 +38,35 @@
       <!-- Jumbotron -->
       <div class="jumbotron">
         <h1>Large Causal Models on Time Series</h1>
-        <p class="lead">This page contains an introduction on the use of Large Causal Models (LCMs) on time series data for causal discovery tasks. Such project is a collaboration between Huawei Research Ireland and Men Ex Machina group (University of Crete and FORTH).</p>
+        <!-- <p class="lead">This page contains an introduction on the use of Large Causal Models (LCMs) on time series data for causal discovery tasks. Such project is a collaboration between Huawei Research Ireland and Men Ex Machina group (University of Crete and FORTH).</p> -->
+        <div class="row">
+          <div class="col-md-12" style="display: grid; grid-template-columns: repeat(3, auto); justify-items: center; max-width: 1000px">
+            <!-- Logos, evenly spaced horizontally -->
+            <a href="https://www.forth.gr/en/home/" target="_blank">
+              <img src="vocab/img/forth logo.jpg" alt="FORTH logo" class="img-fluid" style="max-height: 85px;"/>
+            </a>
+            <a href="https://ie.linkedin.com/company/huawei-ireland-research-center" target="_blank">
+              <img src="vocab/img/logo-huawei.jpeg" alt="Huawei Research logo" class="img-fluid" style="max-height: 85px;"/>
+            </a>
+            <a href="https://www.uoc.gr/en/home/" target="_blank">
+              <img src="vocab/img/uni crete logo.jpg" alt="University of Crete logo" class="img-fluid" style="max-height: 85px;"/>
+            </a>
+          </div>
+        </div>
+        
+        
+        <!-- List below the logos -->
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <ul class="list-unstyled">
+              <li><strong>Foundation for Research and Technology, Hellas (FORTH)</strong></li>
+              <li><strong>Huawei Ireland Research Center - AIOps Team</strong></li>
+              <li><strong>Huawei Dongguan R&D Campus</strong></li>
+            </ul>
+          </div>
+        </div>
+        
+        
       </div>
       <hr>
 
@@ -48,8 +76,8 @@
           A <strong>Large Causal Model (LCM)</strong> for causal discovery is a model that unveils the cause-and-effect relationships between variables in complex systems. These models are particularly useful for understanding how changes in one factor lead to changes in another, rather than just identifying correlations. Additionally, they help identify which variables influence others, especially in complex or high-dimensional datasets where traditional methods might miss key connections.
         </ul>
         
-        <h2>Why Use a Large Causal Model?</h2>
-        Large Causal Models combine the speed and flexibility of deep learning methods with the explainatory power of causal discovery methods, allowing for a fast and efficient prediction of the causal network. The output of causal discovery, in the form of a causal graph, can be used to explain algorithmic outcomes, such as identifying root causes, and to inform evidence-based decision-making, for example through counterfactual analysis.
+        <!-- <h2>Why Use a Large Causal Model?</h2>
+        Large Causal Models combine the speed and flexibility of deep learning methods with the explainatory power of causal discovery methods, allowing for a fast and efficient prediction of the causal network. The output of causal discovery, in the form of a causal graph, can be used to explain algorithmic outcomes, such as identifying root causes, and to inform evidence-based decision-making, for example through counterfactual analysis. -->
       </br>
           <table id="tablesorter-demo" class="tablesorter table table-hover table-responsive">
           <!-- <table> -->
@@ -61,15 +89,7 @@
                   <th class="col-md-2">Scale to large data quantity</th>
                 </tr>
               </thead>
-            <tbody>
-              <tr>
-                <td>
-                  ML/DL approaches
-                </td>
-                <td>No</td>
-                <td>Yes</td>
-                <td>Yes</td>
-              </tr>
+            <tbody>              
               <tr>
                 <td>
                   Traditional Causal Discovery Methods                  
@@ -105,30 +125,100 @@
         <div class="text-center">
           <img src="vocab/img/pipeline.png" alt="Prediction Pipeline" class="img-squared" class="img-responsive "/>
         </div>
-        <h2>Assumptions and Limitations</h2>
-        <p>
-          The last version of the LCMs works under the current assumptions:
-        </p>
+
+        <h2>Try it yourself!</h2>
+
+        <h4>0. Setup</h4>
+        <p>The setup phase is divided into three steps:</p>
         <ul>
-          <li><strong>Causal Markov Condition and Faithfulness</strong>: These assumptions imply that the causal structure of the system fully captures the dependencies among the variables and that the observed data conforms to the causal relationships described by the model.</li>
-          <li><strong>Causal Inference of up to 12 Variables and 3 Time Lags</strong>: The models can handle inputs up to 12 variables and up to 3 time lags.</li>
-          <li><strong>No Contemporaneous Effects</strong>: We assume that all cause-effect relationships occur after at least one time lag, meaning that there are no contemporaneous effects where variables influence each other at the same time step.</li>
-          <li><strong>No Unobserved Confounders</strong>: The model relies on the assumption that all relevant causes are observable and accounted for.</li>
-          <li><strong>Causal Stationarity</strong>: The relationships between variables and their influences do not evolve or change in different time periods.</li>
-          <li><strong>Time-Series Stationarity</strong>: The input time-series data are assumed to be stationary, meaning their statistical properties, such as mean and variance, do not change over time.</li>
+          <li>Download the code at <a href="https://github.com/mensxmachina/LCM-FORTH-Huawei" target="_blank">https://github.com/mensxmachina/LCM-FORTH-Huawei</a></li>
+          <li>Install the required dependencies in <code>requirements.txt</code> (e.g. with <code>pip install -r requirements.txt</code>)</li>
+          <li>Download the pretrained model weights and save them under the <code>res/</code> folder</li>
         </ul>
         
+        <p>Currently, two pretrained models of different sizes are available:</p>
+        <ul>
+          <li><code>deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k</code> (210 MB): <a href="https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd" target="_blank">download link</a> (external link will be available soon)</li>
+          <li><code>lcm_CI_RH_12_3_merged_290k</code> (4.6 GB): <a href="https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38" target="_blank">download link</a> (external link will be available soon)</li>
+        </ul>
         
-        <h2>Reproducibility</h2>
-        <p>Code and additional information can be found on the <a href="https://github.com/mensxmachina/LCM-FORTH-Huawei" target="_blank">project github page</a>.</p>
-      </div>
+        <h4>1. Import the Required Libraries</h4>
+        <p>At first, import the necessary modules for data generation, model prediction, and result visualization:</p>
+        <pre><code>
+        from pathlib import Path
+        from utils.model_wrapper import Architecture_PL
+        from utils.cp_utils import set_seed, create_example_data, run_cp_and_parse_res
+        from utils.plotting_utils import plot_summary_from_pred
+        </code></pre>
+        
+        <h4>2. Load the Data</h4>
+        <p>
+          The LCM takes as input a temporal dataset of shape <code>(N, D)</code> where <strong>N</strong> is the sample size and <strong>D</strong> the feature size (number of time-series). In this example, we generate synthetic data with 1000 time samples, where each column represents a different time series. Data are Min-max normalized and random seed set to <code>42</code> for reproducibility.
+        </p>
+        
+        <pre><code>
+        set_seed(42)
+        
+        df = create_example_data(n=1000)
+        variable_names = list(df.columns)
+        </code></pre>
+        
+        <h4>3. Load the Pretrained Model</h4>
+        <p>Load the <code>.ckpt</code> pretrained model for causal prediction:</p>
+        <pre><code>
+        models_path = 'res'
+        model_name = 'lcm_CI_RH_12_3_merged_290k'
+        
+        model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
+        </code></pre>
+        
+        <h4>4. Perform Causal Discovery</h4>
+        <p>Run <code>run_cp_and_parse_res</code> to perform causal discovery on the data. The <code>max_lag</code> parameter specifies the maximum time window size for analyzing causal relationships:</p>
+              
+        <pre><code>
+        # Run causal discovery with a maximum lag of 2
+        pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2, seed=42)
+        </code></pre>
+        
+        <p>The result is a lagged adjacency tensor of shape <code>(N, N, max_lag)</code> where:</p>
+        <ul>
+          <li><strong>N</strong> is the number of input time-series</li>
+          <li><code>pred[i, j, k]</code> represents the probability that the <strong>j</strong>-th time-series at time <strong>t-(max_lag - k)</strong> causes the <strong>i</strong>-th time-series at time <strong>t</strong>.</li>
+        </ul>
+        
+        <h4>5. Visualize the Results</h4>
+        <p>The predicted causal relationships can be visualized using <code>plot_summary_from_pred</code>. The <code>plt_thr</code> parameter controls the density of the graph: higher values result in fewer edges being displayed.</p>
+        <pre><code>
+        plot_summary_from_pred(pred, variable_names, plt_thr=0.5)
+        </code></pre>
+        
+        <p>In the resulting graph, an edge from time series A to B marked as <code>t-1</code> means that time series A at time <strong>t-1</strong> caused time series B at time <strong>t</strong>.</p>
+        <div class="text-center">
+          <img src="vocab/img/summary.png" alt="Output plot of the summary graph." />
+        </div>
 
-      <footer class="footer">
+        
+
+      
+      <h2>Assumptions and Limitations</h2>
+      <p>
+        The last version of the LCMs works under the current assumptions:
+      </p>
+      <ul>
+        <li><strong>Causal Markov Condition and Faithfulness</strong>: These assumptions imply that the causal structure of the system fully captures the dependencies among the variables and that the observed data conforms to the causal relationships described by the model.</li>
+        <li><strong>Causal Inference of up to 12 Variables and 3 Time Lags</strong>: The models can handle inputs up to 12 variables and up to 3 time lags.</li>
+        <li><strong>No Contemporaneous Effects</strong>: We assume that all cause-effect relationships occur after at least one time lag, meaning that there are no contemporaneous effects where variables influence each other at the same time step.</li>
+        <li><strong>No Unobserved Confounders</strong>: The model relies on the assumption that all relevant causes are observable and accounted for.</li>
+        <li><strong>Causal Stationarity</strong>: The relationships between variables and their influences do not evolve or change in different time periods.</li>
+        <li><strong>Time-Series Stationarity</strong>: The input time-series data are assumed to be stationary, meaning their statistical properties, such as mean and variance, do not change over time.</li>
+      </ul>
+      
+      <!-- <footer class="footer">
         <div class="row">
           <div class="col-md-3">
-            <!-- Built with <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a><br>
+           Built with <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a><br>
             Latest revision February, 2025 -->
-          </div>
+          <!-- </div>
           <div class="col-md-9">
             <a href="https://www.forth.gr/en/home/" target="_blank"><img src="vocab/img/forth logo.jpg" alt="FORTH logo" class="img-squared" class="img-responsive "/></a>
             <a href="https://ie.linkedin.com/company/huawei-ireland-research-center" target="_blank"><img src="vocab/img/logo-huawei.jpeg" alt="Huawei Research logo" class="img-squared" class="img-responsive "/></a>
@@ -137,7 +227,7 @@
           Built with <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a><br>
           Latest revision February, 2025
         </div>
-      </footer>
+      </footer> --> 
     </div> <!-- /container -->
 
   </body>
