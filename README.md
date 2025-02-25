@@ -1,6 +1,6 @@
-# Large Causal Models
+# AIOps LCM
 
-This page contains the  Large Causal Models (LCMs). The aim is discovering temporal causal relationships in time-series datasets, using pretrained deep NN models. The LCM takes as input a temporal dataset $X \in \mathbb{R}^{N \times D}$ where $N$ is the sample size and $D$ the feature size (number of time-series). The output is a lagged adjacency tensor of shape $(N, N, \ell_\text{max})$ where $\ell_\text{max}$ is the hyperparemeter of the maximum assumed lag.
+This repository contains code and resources for testing Large Causal Models (LCMs). The aim is discovering temporal causal relationships in time-series datasets, using pretrained deep NN models. The LCM takes as input a temporal dataset $X \in \mathbb{R}^{N \times D}$ where $N$ is the sample size and $D$ the feature size (number of time-series). The output is a lagged adjacency tensor of shape $(N, N, \ell_\text{max})$ where $\ell_\text{max}$ is the hyperparemeter of the maximum assumed lag.
 
 
 ## Installation
@@ -13,9 +13,9 @@ Install the dependencies from the `requirements.txt` file, either on your base e
 
 Obtain the LCM weights from the following URLs and place them into the `res` folder:
 
-- `deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k` (210 MB): [download link](https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd)
+- `deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k` (210 MB): [download link](https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd) (external links will be available soon)
 - `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38)
-
+ (external links will be available soon)
 ---
 
 ## Illustrative Example
