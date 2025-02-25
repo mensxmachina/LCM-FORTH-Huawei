@@ -1,11 +1,19 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import torch
 
-
-def plot_summary_from_pred(adj_matrix, variable_names, plt_thr):
+def plot_summary_from_pred(adj_matrix: torch.Tensor, variable_names: list, plt_thr: float):
     """
     Plots a graph where nodes represent variables and edges represent connections over time
-    based on a 3D adjacency matrix. plt_thr controls the graph sparsity: the higher plt_thr, the more sparse the graph
+    based on a 3D adjacency tensor. plt_thr controls the graph sparsity: the higher plt_thr, the more sparse the graph
+
+    Args:
+        adj_matrix (torch.Tensor): 3-dimensional adjacency tensor of shape (n_var, n_var, n_time_steps)
+        variable_names (list): List of variable names - only used for labeling
+        plt_thr (float): Graph sparsity
+
+    Returns:
+        None 
     """
     n_var, _, n_time_steps = adj_matrix.shape
     adj_matrix = adj_matrix[:n_var, :n_var, -n_time_steps:]
