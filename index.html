@@ -190,7 +190,7 @@
               
         <pre><code>
         # Run causal discovery with a maximum lag of 2
-        pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2, seed=42)
+        pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2)
         </code></pre>
         
         <p>The result is a lagged adjacency tensor of shape <code>(N, N, max_lag)</code> where:</p>
