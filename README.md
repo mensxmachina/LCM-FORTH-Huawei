@@ -61,7 +61,7 @@ Run `run_cp_and_parse_res` to perform causal discovery on the previous data. The
 
 ```python
 # Run causal discovery with a maximum lag of 2
-pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2, seed=42)
+pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2)
 ```
 
 The result is a lagged adjacency tensor of shape `(N, N, max_lag)` where:
