@@ -13,8 +13,8 @@ Install the dependencies from the `requirements.txt` file, either on your base e
 
 Obtain the LCM weights from the following URLs and place them into the `res` folder:
 
-- `deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k` (210 MB): [download link](https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd) (external links will be available soon)
-- `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38) (external links will be available soon)
+- `deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k` (210 MB): [download link](https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd) 
+- `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38) 
 
 ---
 
