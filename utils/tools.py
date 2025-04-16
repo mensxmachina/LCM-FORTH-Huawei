@@ -14,7 +14,7 @@ class weighted_mse:
         weights[target > 0] = self.scaling
         return (weights * self.mse(inp, target)).mean() 
     
-# Lagged batch autocorrelation
+# Lagged batch cross-correlation
 def lagged_batch_corr(points, max_lags):
     B, N, D = points.size()
 
@@ -26,21 +26,21 @@ def lagged_batch_corr(points, max_lags):
     std = stack.std(dim=1).unsqueeze(1) + 1e-6 # avoiding division by zero
     diffs = (stack - mean).reshape(B * N, D * (max_lags + 1)) # centering
 
-    # autocovariance matrix calculation
+    # cross-correlation matrix calculation
     prods = torch.bmm(diffs.unsqueeze(2), diffs.unsqueeze(1)).reshape(
         B, N, D * (max_lags + 1), D * (max_lags + 1)
     )
 
     bcov = prods.sum(dim=1) / (N - 1)  # unbiased estimate
 
-    # normalize the covariance to obtain the final autocorrelation matrix
+    # normalize to obtain the final cross-correlation matrix
     corr = bcov / (
         std.repeat(1, D * (max_lags + 1), 1).reshape(
             std.shape[0], D * (max_lags + 1), D * (max_lags + 1)
         )
         * std.permute((0, 2, 1))
     )
-    # remove backward time-lag links and thus return only forward autocorrelations
+    # remove backward time-lag links and thus return only forward cross-correlations
     return corr[:, :D, D:]  # (B, D, D)
 
 
