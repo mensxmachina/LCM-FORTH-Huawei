@@ -160,9 +160,9 @@
         <p>At first, import the necessary modules for data generation, model prediction, and result visualization:</p>
         <pre><code>
         from pathlib import Path
-        from utils.model_wrapper import Architecture_PL
-        from utils.cp_utils import set_seed, create_example_data, run_cp_and_parse_res
-        from utils.plotting_utils import plot_summary_from_pred
+        from utils.causal_model import CausalModel # architecture module 
+        from utils.cp_utils import create_example_data # example data creation module
+        from utils.plotting_utils import plot_summary_from_pred # plotting module
         </code></pre>
         
         <h4>2. Load the Data</h4>
@@ -183,15 +183,15 @@
         models_path = 'res'
         model_name = 'lcm_CI_RH_12_3_merged_290k'
         
-        model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
+        model = CausalModel(model_name = model_name, model_path = Path(models_path) / f"{model_name}.ckpt") 
         </code></pre>
         
         <h4>4. Perform Causal Discovery</h4>
-        <p>Run <code>run_cp_and_parse_res</code> to perform causal discovery on the data. The <code>max_lag</code> parameter specifies the maximum time window size for analyzing causal relationships:</p>
+        <p>Run <code> = model.predict</code> to perform causal discovery on the data. The <code>max_lag</code> parameter specifies the maximum time window size for analyzing causal relationships:</p>
               
         <pre><code>
-        # Run causal discovery with a maximum lag of 2
-        pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2)
+        # Run causal discovery with a maximum lag of 1
+        pred = model.predict(df, max_lag_to_predict = 1)
         </code></pre>
         
         <p>The result is a lagged adjacency tensor of shape <code>(N, N, max_lag)</code> where:</p>
