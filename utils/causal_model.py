@@ -1,11 +1,14 @@
+# wrapper class to unify and simplify model loading and prediction
 
+from typing import Tuple, Optional
 from datetime import datetime
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
 import lightning.pytorch as pl 
-from utils.model_wrapper import LCMModule, Architecture_PL
+from utils.LCM_v1_structure import LCM_v1
+from utils.LCM_v2_structure import LCM_v2
 
 class CausalModel():
 
@@ -82,6 +85,93 @@ class CausalModel():
             print(f'{datetime.now().time()} End of inference')
 
         return pred[:n_vars, :n_vars, -max_lag_to_predict:] # cropping the predicted matrix to de desired dimensions
+
+# This class extends the pl.LightningModule and automates the loading the Causal-Pretraining models, as presented 
+# in (Stein et al, 2024): https://github.com/Gideon-Stein/CausalPretraining, where the presented LCMs are based on.    
+# Edit: this is adapted for not using lightning.pytorch
+class Architecture_PL(pl.LightningModule):
+    def __init__(
+        self,
+        n_vars=3,
+        max_lags=3,
+        trans_max_ts_length=500,
+        model_type="transformer",
+        corr_input=True,
+        regression_head=False,
+        distinguish_mode=False,
+        d_model=32,
+        n_heads=2,
+        num_encoder_layers=2,
+        d_ff=128,
+        dropout=0.05,
+        distil=True,
+        **kwargs
+    ):
+        super().__init__()
+
+        if distinguish_mode:
+            regression_head = True
+
+        self.model_type = model_type
+
+        if self.model_type == "transformer":
+            self.model = LCM_v1(
+                n_vars=n_vars,
+                d_model=d_model,
+                max_lags=max_lags,
+                n_heads=n_heads,
+                num_encoder_layers=num_encoder_layers,
+                d_ff=d_ff,
+                dropout=dropout,
+                distil=distil,
+                max_length=trans_max_ts_length,
+                # regression_head=self.regression_head,
+                regression_head=regression_head,
+                corr_input=corr_input,
+            )
+        else:
+            print("MODEL TYPE NOT KNOWN!")
+
+class LCMModule(pl.LightningModule):
+    def __init__(
+        self,
+        n_vars: int = 12,
+        max_lag: int = 3,
+        max_seq_len: int = 500,
+        d_model: int = 16,
+        n_heads: int = 1,
+        n_blocks: int = 2,
+        d_ff: int = 32,
+        dropout_rate: float = 0.05,
+        attention_distilation: bool = True,
+        training_aids: bool = False,
+        patch_len: int = 16,
+        stride: int = 4,
+        num_patches: Optional[int] = None,
+        **kwargs
+    ):
+        super().__init__()  # <- this is needed
+
+        # Model initialization
+        self.model = LCM_v2(
+            n_vars=n_vars,
+            max_lag=max_lag,
+            max_seq_len=max_seq_len,
+            d_model=d_model,
+            n_heads=n_heads,
+            n_blocks=n_blocks,
+            d_ff=d_ff,
+            dropout_rate=dropout_rate,
+            attention_distilation=attention_distilation,
+            training_aids=training_aids,
+            is_patched=True,
+            patch_len=patch_len,
+            stride=stride,
+            num_patches=num_patches
+         )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.model(x)
 
 def lagged_batch_corr(points, max_lags):
     # calculates the autocovariance matrix with a batch dimension

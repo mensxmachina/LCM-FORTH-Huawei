@@ -1,3 +1,5 @@
+# model specification class for the first version of LCM models
+
 import torch
 import torch.nn as nn
 import math
@@ -8,7 +10,7 @@ import torch.nn.functional as F
 # cite the following Informer implementation as the original source: https://github.com/martinwhl/Informer-PyTorch-Lightning
 # Several small modifications have been made, but the general ideal remains the same as in the cited sources. 
 
-class transformer(nn.Module):
+class LCM_v1(nn.Module):
     def __init__(
         self,
         d_model=32, # model dimension for embeddings: out_channels of the Token Embedding 1d conv, and output size of the positional embedding
@@ -26,7 +28,7 @@ class transformer(nn.Module):
         corr_input=False, # by default, no correlation injection
         **kwargs
     ):
-        super(transformer, self).__init__()
+        super(LCM_v1, self).__init__()
 
         self.corr_input = corr_input
         self.regression_head = regression_head
@@ -107,7 +109,6 @@ class transformer(nn.Module):
             return (self.reformat(hidden2), reg_out)
         else:
             return self.reformat(hidden2)
-
 
 class Encoder(nn.Module):
     # This simply handels the executing of attention and conv layers sequentually
@@ -190,7 +191,6 @@ class AttentionLayer(nn.Module):
 
         return self.out_projection(out), attention
 
-
 class FullAttention(nn.Module):
     # Vanilla full attention.
     def __init__(
@@ -215,7 +215,6 @@ class FullAttention(nn.Module):
             return V.contiguous(), A
         return V.contiguous(), None
 
-
 class DataEmbedding(nn.Module):
     def __init__(self, c_in, d_model, dropout=0.1, max_length=5000, kernel_size=3):
         super(DataEmbedding, self).__init__()
@@ -228,7 +227,6 @@ class DataEmbedding(nn.Module):
         b = self.position_embedding(x)
         x = a + b  
         return self.dropout(x)
-
 
 class PositionalEmbedding(nn.Module):
     def __init__(self, d_model, max_length=5000):
@@ -270,7 +268,6 @@ class TokenEmbedding(nn.Module):
         if out.shape[1] != l:
             out = out[:, :l, :]
         return out
-
 
 class SelfAttentionDistil(nn.Module):
     # Reduces the time dimension of the input sequence by running a 1d convolution over it. 
