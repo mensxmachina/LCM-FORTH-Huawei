@@ -1,44 +1,11 @@
+
 from datetime import datetime
 from pathlib import Path
-import sys
 import numpy as np
 import pandas as pd
 import torch
-import random
+import lightning.pytorch as pl 
 from utils.model_wrapper import LCMModule, Architecture_PL
-
-
-def lagged_batch_corr(points, max_lags):
-    # calculates the autocovariance matrix with a batch dimension
-    # lagged variables are concated in the same dimension.
-    # inpuz (B, time, var)
-    # roll to calculate lagged cov:
-    B, N, D = points.size()
-
-    # we roll the data and add it together to have the lagged versions in the table
-    stack = torch.concat(
-        [torch.roll(points, x, dims=1) for x in range(max_lags + 1)], dim=2
-    )
-
-    mean = stack.mean(dim=1).unsqueeze(1)
-    std = stack.std(dim=1).unsqueeze(1) + 1e-6 # avoiding division by zero
-    diffs = (stack - mean).reshape(B * N, D * (max_lags + 1))
-
-    prods = torch.bmm(diffs.unsqueeze(2), diffs.unsqueeze(1)).reshape(
-        B, N, D * (max_lags + 1), D * (max_lags + 1)
-    )
-
-    bcov = prods.sum(dim=1) / (N - 1)  # Unbiased estimate
-    # make correlation out of it by dividing by the product of the stds
-    corr = bcov / (
-        std.repeat(1, D * (max_lags + 1), 1).reshape(
-            std.shape[0], D * (max_lags + 1), D * (max_lags + 1)
-        )
-        * std.permute((0, 2, 1))
-    )
-    # we can remove backwards in time links. (keep only the original values)
-    return corr[:, :D, D:]  # (B, D, D)
-
 
 class CausalModel():
 
@@ -67,11 +34,10 @@ class CausalModel():
                         f"Failed to load checkpoint '{ckpt_path}' with either loader.\n"
                         f"Architecture_PL error: {e1}\n"
                         f"LCMModule error: {e2}\n"
-                        # f"InformerModule error: {e3}"
                     )
 
     @staticmethod
-    def _calculate_max_lag_and_var(model_name): #to change with new models
+    def _calculate_max_lag_and_var(model_name): 
         return 3, 12
 
     def predict(self, df : pd.DataFrame, max_lag_to_predict, verbose = 0, seed = 42, rotation_invariant_prediction = False, prior: torch.Tensor=None, belief: torch.tensor=None):
@@ -108,12 +74,6 @@ class CausalModel():
 
         pred = run_informer(self.model_name, model = self.model, data = X_test, MAX_VAR=self.model_max_var, MAX_LAG= self.model_max_lag, seed = seed, prior = prior, belief = belief)
 
-        # if isinstance(self.model, Architecture_PL):
-        #     pred = run_cp(self.model_name, model = self.model, data = X_test, MAX_VAR=self.model_max_var, MAX_LAG= self.model_max_lag, seed = seed)
-        # elif isinstance(self.model, LCMModule):
-        #     pred = run_lcm(self.model_name, model = self.model, data = X_test, MAX_VAR=self.model_max_var, MAX_LAG= self.model_max_lag, seed = seed, prior = prior, belief = belief)
-        # elif isinstance(self.model, InformerModule):
-        #     pred = run_informer(self.model_name, model = self.model, data = X_test, MAX_VAR=self.model_max_var, MAX_LAG= self.model_max_lag, seed = seed, prior = prior, belief = belief)
         if self.model != 'cpu':
             pred = pred.cpu()
         pred = pred[0].detach().clone().numpy()
@@ -123,18 +83,39 @@ class CausalModel():
 
         return pred[:n_vars, :n_vars, -max_lag_to_predict:] # cropping the predicted matrix to de desired dimensions
 
-def seed_everything(seed: int = 42):
-    random.seed(seed)                     # Python random
-    np.random.seed(seed)                  # NumPy random
-    torch.manual_seed(seed)               # PyTorch CPU
-    torch.cuda.manual_seed(seed)          # PyTorch GPU
-    torch.cuda.manual_seed_all(seed)      # All GPUs, if multiple
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+def lagged_batch_corr(points, max_lags):
+    # calculates the autocovariance matrix with a batch dimension
+    # lagged variables are concated in the same dimension.
+    # inpuz (B, time, var)
+    # roll to calculate lagged cov:
+    B, N, D = points.size()
+
+    # we roll the data and add it together to have the lagged versions in the table
+    stack = torch.concat(
+        [torch.roll(points, x, dims=1) for x in range(max_lags + 1)], dim=2
+    )
+
+    mean = stack.mean(dim=1).unsqueeze(1)
+    std = stack.std(dim=1).unsqueeze(1) + 1e-6 # avoiding division by zero
+    diffs = (stack - mean).reshape(B * N, D * (max_lags + 1))
+
+    prods = torch.bmm(diffs.unsqueeze(2), diffs.unsqueeze(1)).reshape(
+        B, N, D * (max_lags + 1), D * (max_lags + 1)
+    )
+
+    bcov = prods.sum(dim=1) / (N - 1)  # Unbiased estimate
+    # make correlation out of it by dividing by the product of the stds
+    corr = bcov / (
+        std.repeat(1, D * (max_lags + 1), 1).reshape(
+            std.shape[0], D * (max_lags + 1), D * (max_lags + 1)
+        )
+        * std.permute((0, 2, 1))
+    )
+    # we can remove backwards in time links. (keep only the original values)
+    return corr[:, :D, D:]  # (B, D, D)
 
 def run_informer(model_name, model, data, MAX_VAR, MAX_LAG, seed, prior, belief):
     M = model.model
-    # M = M.to("cpu")
     M = M.eval() 
 
     if (MAX_VAR is None) or (MAX_LAG is None):
@@ -152,11 +133,8 @@ def run_informer(model_name, model, data, MAX_VAR, MAX_LAG, seed, prior, belief)
 
     # Padding
     if seed is not None:
-        # torch.use_deterministic_algorithms(True)c
-        # generator = torch.manual_seed(seed)
         generator = torch.Generator(device=data.device)
-        # pl.seed_everything(42, workers=True, verbose = False)
-        seed_everything(42)
+        pl.seed_everything(42, workers=True, verbose = False)
     else:
         generator = None
 
@@ -206,7 +184,6 @@ def run_informer(model_name, model, data, MAX_VAR, MAX_LAG, seed, prior, belief)
             else:    
                 with torch.no_grad():
                     pred = torch.sigmoid(M((X_cpd.unsqueeze(0), lagged_batch_corr(X_cpd.unsqueeze(0), 3))))
-                    #pred = torch.sigmoid(M((X_cpd.unsqueeze(0), lagged_batch_corr(X_cpd.unsqueeze(0), 3), lagged_batch_transfer_entropy(X_cpd.unsqueeze(0), MAX_LAG)))) 
         else:
             with torch.no_grad():
                 pred = torch.sigmoid(M(X_cpd.unsqueeze(0)))

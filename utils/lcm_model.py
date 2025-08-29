@@ -2,7 +2,28 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils.tools import *
+
+class PositionalEmbedding(nn.Module):
+    def __init__(self, d_model: int=16, max_length: int=10000):
+        """
+        Sinusoidal positional embeddings as per Vaswani et al, 2017.
+        """
+        super(PositionalEmbedding, self).__init__()
+        embedding = torch.zeros(max_length, d_model) # shape is [max_length, d_model]
+
+        position = torch.arange(0, max_length).float().unsqueeze(1) # shape is [max_length, 1]
+        div_term = (
+            torch.arange(0, d_model, 2).float() * -(math.log(10000.0) / d_model)
+        ).exp()
+
+        embedding[:, 0::2] = torch.sin(position * div_term) # even terms
+        embedding[:, 1::2] = torch.cos(position * div_term) # odd terms
+
+        embedding = embedding.unsqueeze(0) # [1, max_length, d_model]
+        self.register_buffer("embedding", embedding)
+
+    def forward(self, x):
+        return self.embedding[:, : x.size(1)] # forward pass is of shape [1, x.size(1), d_model], just returns the positional encoding
 
 class Patching(nn.Module):
     def __init__(self, patch_len, stride):
