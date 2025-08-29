@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from utils.causal_model import CausalModel # architecture module 
-from utils.cp_utils import create_example_data # prediction module
+from utils.cp_utils import create_example_data # example data creation module
 from utils.plotting_utils import plot_summary_from_pred # plotting module
 
 
