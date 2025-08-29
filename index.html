@@ -161,7 +161,7 @@
         <pre><code>
         from pathlib import Path
         from utils.causal_model import CausalModel # architecture module 
-        from utils.cp_utils import create_example_data # example data creation module
+        from utils.data_utils import create_example_data # example data creation module
         from utils.plotting_utils import plot_summary_from_pred # plotting module
         </code></pre>
         
@@ -203,7 +203,7 @@
         <h4>5. Visualize the Results</h4>
         <p>The predicted causal relationships can be visualized using <code>plot_summary_from_pred</code>. The <code>plt_thr</code> parameter controls the density of the graph: higher values result in fewer edges being displayed.</p>
         <pre><code>
-        plot_summary_from_pred(pred, variable_names, plt_thr=0.5)
+        plot_summary_from_pred(pred, variable_names, plt_thr=0.25)
         </code></pre>
         
         <p>In the resulting graph, an edge from time series A to B marked as <code>t-1</code> means that time series A at time <strong>t-1</strong> caused time series B at time <strong>t</strong>.</p>
