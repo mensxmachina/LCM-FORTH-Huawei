@@ -3,7 +3,7 @@
 from pathlib import Path
 from utils.causal_model import CausalModel # architecture module 
 from utils.data_utils import create_example_data # example data creation module
-from utils.plotting_utils import plot_summary_from_pred # plotting module
+from utils.plotting_utils import plot_summary_from_pred, plot_summary_graph # plotting module
 
 
 # Data generation and normalization
@@ -20,3 +20,8 @@ pred = model.predict(df, max_lag_to_predict = 1)
 
 # Results plot 
 plot_summary_from_pred(pred, variable_names, plt_thr = 0.25)
+
+# Prediction method that automatically selects the best causal graph among all the available models and thresholds
+import utils.prediction_utils as pu
+G = pu.get_best_graph(df, models_folder = models_path)
+plot_summary_graph(G, variable_names)

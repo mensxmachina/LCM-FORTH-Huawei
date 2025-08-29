@@ -33,7 +33,9 @@ def plot_summary_from_pred(adj_matrix: torch.Tensor, variable_names: list, plt_t
                     else:
                         # Otherwise, create a new edge with the first time step
                         G.add_edge(j, i, time_steps=[f't-{n_time_steps-t}'])
+    plot_summary_graph(G, variable_names)
 
+def plot_summary_graph(G : nx.DiGraph, variable_names : list):
     # Draw the graph
     pos = nx.spring_layout(G, seed=42)  # Layout for node positions
     plt.figure(figsize=(5, 5))
