@@ -12,8 +12,8 @@ Install the dependencies from the `requirements.txt` file, either on your base e
 ## Pre-trained weights
 
 Obtain the LCM weights from the following URLs and place them into the `res` folder:
-
-- `deep_CI_12_3_fine_tuned_frozen_sim_82k_pre_joint_220k` (210 MB): [download link](https://onebox.huawei.com/p/8cc0be09bfd68373ba262382f6c2d9dd) 
+- `LCM_CI_CR_1.3M_12_3_joint_220k` (30 MB): [download link](https://onebox.huawei.com/p/818499f098dc5baa7cba5e3a20ddf076) 
+- `LCM_CI_9.6M_joint_220k_permuted_3` (127 MB): [download link](https://onebox.huawei.com/p/631c67069e9f7322c604291381f1fb49) 
 - `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38) 
 
 ---
@@ -28,9 +28,9 @@ At first, import the necessary modules for data generation, model prediction, an
 
 ```python
 from pathlib import Path
-from utils.model_wrapper import Architecture_PL
-from utils.cp_utils import set_seed, create_example_data, run_cp_and_parse_res
-from utils.plotting_utils import plot_summary_from_pred
+from utils.causal_model import CausalModel # architecture module 
+from utils.data_utils import create_example_data # example data creation module
+from utils.plotting_utils import plot_summary_from_pred, plot_summary_graph # plotting module
 ```
 
 ### 2. Generate Synthetic Data
@@ -52,16 +52,16 @@ Load the `.ckpt` pretrained model for causal prediction:
 models_path = 'res'
 model_name = 'lcm_CI_RH_12_3_merged_290k'
 
-model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
+model = CausalModel(model_name = model_name, model_path = Path(models_path) / f"{model_name}.ckpt") 
 ```
 
 ### 4. Perform Causal Discovery
 
-Run `run_cp_and_parse_res` to perform causal discovery on the previous data. The `max_lag` parameter specifies the maximum time window size for analyzing causal relationships:
+Run `model.predict` to perform causal discovery on the previous data. The `max_lag` parameter specifies the maximum time window size for analyzing causal relationships:
 
 ```python
-# Run causal discovery with a maximum lag of 2
-pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2)
+# Run causal discovery with a maximum lag of 1
+pred = model.predict(df, max_lag_to_predict = 1)
 ```
 
 The result is a lagged adjacency tensor of shape `(N, N, max_lag)` where:
@@ -81,6 +81,15 @@ In the resulting graph, an edge from time series A to B marked as `t-1` means th
 
 ![Output plot of the summary graph.](media/summary.png)
 
+
+### 6. Alternative Causal Discovery Method
+As an alternative to using a specific causal model or threshold, the `get_best_graph` method can be applied. This method evaluates all available models and thresholds and returns the causal graph that optimally represents the relationships in the dataset.
+
+```python
+import utils.prediction_utils as pu
+G = pu.get_best_graph(df, models_folder = models_path)
+plot_summary_graph(G, variable_names)
+```
 
 The above example can be found in `simple_example.py`
 
