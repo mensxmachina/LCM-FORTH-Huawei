@@ -12,9 +12,9 @@ Install the dependencies from the `requirements.txt` file, either on your base e
 ## Pre-trained weights
 
 Obtain the LCM weights from the following URLs and place them into the `res` folder:
-- `LCM_CI_CR_1.3M_12_3_joint_220k` (30 MB): [download link](https://onebox.huawei.com/p/818499f098dc5baa7cba5e3a20ddf076) 
-- `LCM_CI_9.6M_joint_220k_permuted_3` (127 MB): [download link](https://onebox.huawei.com/p/631c67069e9f7322c604291381f1fb49) 
-- `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://onebox.huawei.com/p/7cfe822b2fa5594b04d62403e5f90a38) 
+- `LCM_CI_CR_1.3M_12_3_joint_220k` (30 MB): [download link](https://figshare.com/articles/software/LCM_CI_CR_1_3M_12_3_joint_220k_ckpt/30022681) 
+- `LCM_CI_9.6M_joint_220k_permuted_3` (127 MB): [download link](https://figshare.com/articles/software/LCM_CI_9_6M_joint_220k_permuted_3_ckpt/30022678) 
+- `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://figshare.com/articles/software/lcm_CI_CR_12_3_merged_340k/30022684) 
 
 ---
 
