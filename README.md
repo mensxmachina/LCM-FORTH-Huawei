@@ -1,7 +1,7 @@
-# AIOps LCM
+# Large Causal Models on Time Series
 
 This repository contains code and resources for testing Large Causal Models (LCMs). The aim is discovering temporal causal relationships in time-series datasets, using pretrained deep NN models. The LCM takes as input a temporal dataset $X \in \mathbb{R}^{N \times D}$ where $N$ is the sample size and $D$ the feature size (number of time-series). The output is a lagged adjacency tensor of shape $(N, N, \ell_\text{max})$ where $\ell_\text{max}$ is the hyperparemeter of the maximum assumed lag.
-
+An high-level overview of this project is available on [our welcoming page](https://mensxmachina.github.io/LCM-FORTH-Huawei/).
 
 ## Installation
 
@@ -15,6 +15,7 @@ Obtain the LCM weights from the following URLs and place them into the `res` fol
 - `LCM_CI_CR_1.3M_12_3_joint_220k` (30 MB): [download link](https://figshare.com/articles/software/LCM_CI_CR_1_3M_12_3_joint_220k_ckpt/30022681) 
 - `LCM_CI_9.6M_joint_220k_permuted_3` (127 MB): [download link](https://figshare.com/articles/software/LCM_CI_9_6M_joint_220k_permuted_3_ckpt/30022678) 
 - `lcm_CI_RH_12_3_merged_290k` (4.6 GB): [download link](https://figshare.com/articles/software/lcm_CI_CR_12_3_merged_340k/30022684) 
+
 ---
 
 ## Illustrative Example
@@ -27,9 +28,9 @@ At first, import the necessary modules for data generation, model prediction, an
 
 ```python
 from pathlib import Path
-from utils.model_wrapper import Architecture_PL
-from utils.cp_utils import set_seed, create_example_data, run_cp_and_parse_res
-from utils.plotting_utils import plot_summary_from_pred
+from utils.causal_model import CausalModel # architecture module 
+from utils.data_utils import create_example_data # example data creation module
+from utils.plotting_utils import plot_summary_from_pred, plot_summary_graph # plotting module
 ```
 
 ### 2. Generate Synthetic Data
@@ -51,16 +52,16 @@ Load the `.ckpt` pretrained model for causal prediction:
 models_path = 'res'
 model_name = 'lcm_CI_RH_12_3_merged_290k'
 
-model = Architecture_PL.load_from_checkpoint(Path(models_path) / f"{model_name}.ckpt")
+model = CausalModel(model_name = model_name, model_path = Path(models_path) / f"{model_name}.ckpt") 
 ```
 
 ### 4. Perform Causal Discovery
 
-Run `run_cp_and_parse_res` to perform causal discovery on the previous data. The `max_lag` parameter specifies the maximum time window size for analyzing causal relationships:
+Run `model.predict` to perform causal discovery on the previous data. The `max_lag` parameter specifies the maximum time window size for analyzing causal relationships:
 
 ```python
-# Run causal discovery with a maximum lag of 2
-pred = run_cp_and_parse_res(model_name, model=model, df=df, max_lag=2)
+# Run causal discovery with a maximum lag of 1
+pred = model.predict(df, max_lag_to_predict = 1)
 ```
 
 The result is a lagged adjacency tensor of shape `(N, N, max_lag)` where:
@@ -81,6 +82,15 @@ In the resulting graph, an edge from time series A to B marked as `t-1` means th
 ![Output plot of the summary graph.](media/summary.png)
 
 
+### 6. Alternative Causal Discovery Method
+As an alternative to using a specific causal model or threshold, the `get_best_graph` method can be applied. This method evaluates all available models and thresholds and returns the causal graph that optimally represents the relationships in the dataset.
+
+```python
+import utils.prediction_utils as pu
+G = pu.get_best_graph(df, models_folder = models_path)
+plot_summary_graph(G, variable_names)
+```
+
 The above example can be found in `simple_example.py`
 
 ---
@@ -91,10 +101,10 @@ We assume Causal Markov Condition and Faithfulness throughout. The following ass
 
 - **Causal inference of up to 12 variables and 3 time lags**: The models can handle inputs up to 12 variables and $\ell_\text{max}=1,2,3$.
 
-- **No contemporaneous effects**: All cause-effect pairs are assumed to occur with lag $\ell > 0$.
+- **No contemporaneous effects**: The model discovers only the non-instantaneous relationships, i.e. the ones that occur with lag $\ell > 0$.
 
-- **No unobserved confounders**: The model assumes that there are no latent confounders (unobserved common causes) that could influence the relationships between the variables.
+---
 
-- **Causal Stationarity**: The graph structure and noise distribution of the SCM does not change over time.
+### Contacts
 
-- **Time-series stationarity**: The input time-series are assumed to be stationary.
+If you have questions, suggestions, or would like to collaborate, feel free to open an issue or reach out via mail at: wangmingxue1@huawei.com or bora.caglayan@huawei.com
