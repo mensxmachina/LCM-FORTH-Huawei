@@ -149,7 +149,7 @@
           <li>Download the pretrained model weights and save them under the <code>res/</code> folder</li>
         </ul>
         
-        <p>Currently, two pretrained LCM models of different sizes are available:</p>
+        <p>Currently, three pretrained LCM models of different sizes are available:</p>
         <ul>
           <li><code>LCM_CI_CR_1.3M_12_3_joint_220k</code><b>(30 MB Small): <a href="https://figshare.com/articles/software/LCM_CI_CR_1_3M_12_3_joint_220k_ckpt/30022681" target="_blank">download link</a></b></li>
           <li><code>LCM_CI_9.6M_joint_220k_permuted_3</code><b>(167 MB Medium): <a href="https://figshare.com/articles/software/LCM_CI_9_6M_joint_220k_permuted_3_ckpt/30022678" target="_blank">download link</a></b></li>
@@ -233,12 +233,14 @@
       <ul>
         <li><strong>Causal Markov Condition and Faithfulness</strong>: These assumptions imply that the causal structure of the system fully captures the dependencies among the variables and that the observed data conforms to the causal relationships described by the model.</li>
         <li><strong>Causal Inference of up to 12 Variables and 3 Time Lags</strong>: The models can handle inputs up to 12 variables and up to 3 time lags.</li>
-        <li><strong>No Contemporaneous Effects</strong>: We assume that all cause-effect relationships occur after at least one time lag, meaning that there are no contemporaneous effects where variables influence each other at the same time step.</li>
-        <li><strong>No Unobserved Confounders</strong>: The model relies on the assumption that all relevant causes are observable and accounted for.</li>
-        <li><strong>Causal Stationarity</strong>: The relationships between variables and their influences do not evolve or change in different time periods.</li>
-        <li><strong>Time-Series Stationarity</strong>: The input time-series data are assumed to be stationary, meaning their statistical properties, such as mean and variance, do not change over time.</li>
+        <li><strong>No Contemporaneous Effects</strong>: The model discovers only the non-instantaneous relationships, and identifies the ones that occur after at least one time lag.</li>
       </ul>
-      
+
+      <h2>Contacts</h2>
+      <p>
+        If you have questions, suggestions, or would like to collaborate, feel free to open an issue or reach out via mail at: wangmingxue1@huawei.com or bora.caglayan@huawei.com
+      </p>
+        
       <!-- <footer class="footer">
         <div class="row">
           <div class="col-md-3">
