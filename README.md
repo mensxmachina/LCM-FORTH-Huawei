@@ -1,7 +1,7 @@
 # Large Causal Models on Time Series
 
 This repository contains code and resources for testing Large Causal Models (LCMs). The aim is discovering temporal causal relationships in time-series datasets, using pretrained deep NN models. The LCM takes as input a temporal dataset $X \in \mathbb{R}^{N \times D}$ where $N$ is the sample size and $D$ the feature size (number of time-series). The output is a lagged adjacency tensor of shape $(N, N, \ell_\text{max})$ where $\ell_\text{max}$ is the hyperparemeter of the maximum assumed lag.
-
+An high-level overview of this project is available on [our welcoming page](https://mensxmachina.github.io/LCM-FORTH-Huawei/).
 
 ## Installation
 
@@ -101,10 +101,10 @@ We assume Causal Markov Condition and Faithfulness throughout. The following ass
 
 - **Causal inference of up to 12 variables and 3 time lags**: The models can handle inputs up to 12 variables and $\ell_\text{max}=1,2,3$.
 
-- **No contemporaneous effects**: All cause-effect pairs are assumed to occur with lag $\ell > 0$.
+- **No contemporaneous effects**: The model discovers only the non-instantaneous relationships, i.e. the ones that occur with lag $\ell > 0$.
 
-- **No unobserved confounders**: The model assumes that there are no latent confounders (unobserved common causes) that could influence the relationships between the variables.
+---
 
-- **Causal Stationarity**: The graph structure and noise distribution of the SCM does not change over time.
+### Contacts
 
-- **Time-series stationarity**: The input time-series are assumed to be stationary.
+If you have questions, suggestions, or would like to collaborate, feel free to open an issue or reach out via mail at: wangmingxue1@huawei.com or bora.caglayan@huawei.com
